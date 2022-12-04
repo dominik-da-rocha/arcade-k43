@@ -1,0 +1,26 @@
+.Button {
+  display: inline-block;
+  box-shadow: 0px 0px 0.5rem var(--color-pink) inset,
+    0px 0px 0.5rem var(--color-pink);
+  border: 2px solid var(--color-light-pink);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+
+  background: transparent;
+  color: var(--color-foreground);
+  font-family: ZenDots;
+  min-height: 3rem;
+  min-width: 3rem;
+  transition: box-shadow 1s;
+  outline: none;
+}
+
+.Button:active {
+  transition: box-shadow 0.25s;
+  box-shadow: 0px 0px 1.5rem var(--color-pink) inset,
+    0px 0px 1.5rem var(--color-pink);
+}
+
+.Button:focus {
+  outline: none;
+}

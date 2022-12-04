@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>1958 Tennis Cup</title>
+   <style>
+      body {
+         background-color: black;
+         font-family: mono;
+         color: green;
+         font-size: 10px;
+      }
+
+      section {
+         margin: 5px;
+      }
+
+      h1 {
+         font-size: 16px;
+      }
+
+      table {
+         border-collapse: visible;
+         border: 1px solid green;
+      }
+
+      canvas {
+         display: block;
+         background: black;
+         border: 1px solid green;
+         width: 500px;
+         height: 250px;
+      }
+   </style>
+   <script type="text/javascript">
+      const cPI2 = Math.PI * 2;
+      const cKeyUp = 38;
+      const cKeyDown = 40;
+      const cKeyS = 83;
+      const cKeyX = 88;
+      const cKey0 = 48;
+      const cKey1 = 49;
+      const cKey2 = 50;
+
+      var mCanvas;
+      var mTimer;
+      var mCtx;
+      var mBar1 = new Bar(1, 10, 200, 10, 100, 10, cKeyS, cKeyX, "#f005500");
+      var mBar2 = new Bar(2, 980, 200, 10, 100, 10, cKeyUp, cKeyDown, "#f005500");
+      var mBall = new Ball(500, 250, 10, 10, 7, "#008800");
+
+      function Bar(id, x, y, width, height, speed, keyUp, keyDown, fill) {
+         this.id = id;
+         this.x = x;
+         this.y = y;
+         this.startX = x;
+         this.startY = y;
+         this.left = x;
+         this.right = x + width;
+         this.top = y;
+         this.bottom = y + height;
+         this.width = width;
+         this.height = height;
+         this.speed = speed;
+         this.keyUp = keyUp;
+         this.keyDown = keyDown;
+         this.fill = fill;
+         this.points = 0;
+         this.pointsDisplay;
+         this.isRobot = true;
+         return this;
+      }
+
+      function drawBar(bar) {
+         mCtx.fillStyle = bar.fill;
+         mCtx.fillRect(bar.x, bar.y, bar.width, bar.height);
+      }
+
+      function initBar(bar) {
+         displayId = "points" + bar.id;
+         bar.pointsDisplay = document.getElementById(displayId);
+      }
+
+      function moveBar(bar, keyCode) {
+
+         if (keyCode == bar.keyUp
+            && (bar.y - bar.speed) > 0) {
+            setBarPosition(bar, bar.x, bar.y - bar.speed);
+            ;
+         }
+
+         if (keyCode == bar.keyDown
+            && (bar.y + bar.speed) < (mCanvas.height - bar.height)) {
+            setBarPosition(bar, bar.x, bar.y + bar.speed);
+         }
+      }
+
+      function robotBar(bar) {
+         if (bar.isRobot) {
+            setBarPosition(bar, bar.x, mBall.y - bar.height / 2);
+         }
+      }
+
+      function setBarPosition(bar, x, y) {
+         bar.x = x;
+         bar.y = y;
+         bar.left = x;
+         bar.right = x + bar.width;
+         bar.top = y;
+         bar.bottom = y + bar.height;
+      }
+
+      function Ball(x, y, r, speedX, speedY, fill) {
+         this.x = x;
+         this.y = y;
+         this.startX = x;
+         this.startY = y;
+         this.r = r;
+         this.speedX = speedX;
+         this.speedY = speedY;
+         this.fill = fill;
+         return this;
+      }
+
+      function init() {
+         window.addEventListener("keydown", doKeyDown, false);
+         mCanvas = document.getElementById("canvas");
+         mCtx = canvas.getContext("2d");
+         mTimer = setInterval(draw, 100);
+         initBar(mBar1);
+         initBar(mBar2);
+         return mTimer;
+      }
+
+      function drawBall(ball) {
+         mCtx.fillStyle = ball.fill;
+         mCtx.beginPath();
+         mCtx.lineWidth = 1;
+         mCtx.arc(ball.x, ball.y, ball.r, 0, cPI2, true);
+         mCtx.fill();
+      }
+
+      function moveBall() {
+
+         var newX = mBall.x + mBall.speedX;
+         var newY = mBall.y + mBall.speedY;
+
+         if (newX < mBar1.right
+            && newY > mBar1.top
+            && newY < mBar1.bottom) {
+            mBall.speedX = -mBall.speedX;
+         }
+         else if (newX > mBar2.left
+            && newY > mBar2.top
+            && newY < mBar2.bottom) {
+            mBall.speedX = -mBall.speedX;
+         }
+         else if (newY > mCanvas.height
+            || newY < 0) {
+            mBall.speedY = -mBall.speedY;
+         }
+         else if (newX > mCanvas.width) {
+            hit(mBar1);
+         }
+         else if (newX < 0) {
+            hit(mBar2);
+         }
+
+         mBall.x += mBall.speedX;
+         mBall.y += mBall.speedY;
+
+      }
+
+      function hit(bar) {
+         bar.points++;
+         bar.pointsDisplay.textContent = "Player " + bar.id + ": " + bar.points;
+         resetBall();
+         resetBar(mBar1);
+         resetBar(mBar2);
+      }
+
+      function resetBall() {
+         mBall.x = mBall.startX;
+         mBall.y = mBall.startY;
+      }
+
+      function resetBar(bar) {
+         setBarPosition(bar, bar.startX, bar.startY);
+      }
+
+      function clearCanvas() {
+         mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
+         mCtx.fillStyle = "#000000";
+         mCtx.fillRect(0, 0, mCanvas.width, mCanvas.height);
+      }
+
+      function setPlayerMode(keyCode) {
+         if (keyCode == cKey0) {
+            mBar1.isRobot = true;
+            mBar2.isRobot = true;
+         }
+         else if (keyCode == cKey1) {
+            mBar1.isRobot = true;
+            mBar2.isRobot = false;
+         }
+         else if (keyCode == cKey2) {
+            mBar1.isRobot = false;
+            mBar2.isRobot = false;
+         }
+      }
+
+      function doKeyDown(e) {
+         console.debug(e.keyCode);
+         moveBar(mBar1, e.keyCode);
+         moveBar(mBar2, e.keyCode);
+         setPlayerMode(e.keyCode);
+      }
+
+      function draw() {
+         console.debug("draw");
+         clearCanvas();
+         drawBall(mBall);
+         robotBar(mBar1);
+         robotBar(mBar2);
+         moveBall();
+         drawBar(mBar1);
+         drawBar(mBar2);
+
+
+      }
+
+   </script>
+</head>
+
+<body onload="init();">
+
+   <header>
+      <h1>1958 Tennis Cup</h1>
+   </header>
+
+   <main>
+      <section id="points">
+         <p id="points1">Player 1: 0</p>
+         <p id="points2">Player 2: 0</p>
+      </section>
+      <section>
+         <canvas id="canvas" width="1000" height="500" />
+      </section>
+   </main>
+
+   <footer>
+      <section id="help">
+         <table>
+            <tr>
+               <th>Keys</th>
+               <th>Actions</th>
+            </tr>
+            <tr>
+               <td>[s]/[x]</td>
+               <td>Move player 1</td>
+            </tr>
+            <tr>
+               <td>[Up]/[Down]</td>
+               <td>Move player 2</td>
+            </tr>
+            <tr>
+               <td>[0]</td>
+               <td>Robot Mode</td>
+            </tr>
+            <tr>
+               <td>[1]</td>
+               <td>Single Player</td>
+            </tr>
+            <tr>
+               <td>[2]</td>
+               <td>Multi Player</td>
+            </tr>
+         </table>
+      </section>
+   </footer>
+
+</body>
+
+</html>

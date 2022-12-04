@@ -1,0 +1,112 @@
+.App {
+}
+
+.LoremIpsum {
+  margin-bottom: 2rem;
+}
+
+header {
+  position: fixed;
+  top: 0rem;
+  left: 0rem;
+  right: 0rem;
+  height: var(--header-height);
+  background-color: var(--color-background);
+  text-shadow: 0 0 1rem var(--color-light-pink);
+}
+
+main {
+  position: fixed;
+  top: var(--header-height);
+  left: 0rem;
+  right: 0rem;
+  bottom: 0rem;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+}
+
+header > .Neon {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  animation-name: NeonFlickerStart;
+  animation-duration: 5s;
+  animation-iteration-count: 1;
+
+  margin-left: 1rem;
+  margin-right: 1rem;
+  font-size: 2rem;
+  text-shadow: 0 0 1rem var(--color-pink);
+  user-select: none;
+}
+
+@keyframes NeonFlickerStart {
+  0% {
+    opacity: 0;
+  }
+  9% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  12% {
+    opacity: 1;
+  }
+  13% {
+    opacity: 1;
+  }
+  14% {
+    opacity: 0;
+  }
+  17% {
+    opacity: 1;
+  }
+  18% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 1;
+  }
+  31% {
+    opacity: 0;
+  }
+  98% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+main .Home {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+main .Notice {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1rem;
+  height: 100%;
+  padding: 5rem;
+}

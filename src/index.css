@@ -1,0 +1,48 @@
+:root {
+  --color-light-pink: #fde9fd;
+  --color-dark-pink: #2c0b37;
+  --color-pink: #ff75ff;
+  --color-light-green: #c0efe3;
+
+  --color-background: var(--color-dark-pink);
+  --color-foreground: var(--color-light-green);
+  --color-control: var(--color-pink);
+
+  --header-height: 4rem;
+}
+
+body {
+  margin: 0;
+  font-family: ZenDots;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  text-shadow: 0 0 0.5rem var(--color-light-pink);
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+@font-face {
+  font-family: "ZenDots";
+  src: url("/fonts/ZenDots-Regular.ttf");
+}
+
+.ZenDots {
+  font-family: ZenDots;
+}
+
+@font-face {
+  font-family: "MaterialIcons";
+  src: url("/fonts/MaterialIcons-Regular.ttf");
+}
+
+.MaterialIcons {
+  font-family: MaterialIcons;
+  font-size: 1.5rem;
+  line-height: 125%;
+}
+
+a {
+  color: var(--color-foreground);
+  text-decoration: none;
+}
