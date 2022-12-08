@@ -11,5 +11,5 @@ func main() {
    fmt.Println("█      █    █  █      █    ▄▄  █ █▄█   █    ▄▄▄█  █▄▄▄    █▄▄▄    █");
    fmt.Println("█  ▄   █    █▄▄█  ▄   █   █  █ █       █   █▄▄▄       █   █▄▄▄█   █");
    fmt.Println("█▄█ █▄▄█▄▄▄▄▄▄▄█▄█ █▄▄█▄▄▄█  █▄█▄▄▄▄▄▄██▄▄▄▄▄▄▄█      █▄▄▄█▄▄▄▄▄▄▄█");
-   fmt.Println("                                                        {version}  ");
+   fmt.Println("                                                          {version}");
 }
