@@ -288,31 +288,31 @@ export class TetrisEngine {
 
   public rotateCCW() {
     if (this.isRunning) {
-      this.requestedRotation--;
+      this.requestedRotation = -1;
     }
   }
 
   public rotateCW() {
     if (this.isRunning) {
-      this.requestedRotation++;
+      this.requestedRotation = 1;
     }
   }
 
   public moveRight() {
     if (this.isRunning) {
-      this.requestedX++;
+      this.requestedX = 1;
     }
   }
 
   public moveDown() {
     if (this.isRunning) {
-      this.requestedY++;
+      this.requestedY = 1;
     }
   }
 
   public moveLeft() {
     if (this.isRunning) {
-      this.requestedX--;
+      this.requestedX = -1;
     }
   }
 

@@ -40,7 +40,7 @@ export function Tetris(props: TetrisProps) {
     let timer = setInterval(() => {
       ctl.engine.update();
       setTrigger(!trigger);
-    }, 1);
+    }, 10);
 
     let keyHandler = (event: any) => {
       switch (event.key) {
