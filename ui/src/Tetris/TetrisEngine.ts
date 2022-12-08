@@ -4,65 +4,42 @@ import {
   TetrisBlockRotation,
 } from "./TetrisBlock";
 
-export enum TetrisGameStage {
-  Running,
-  GameOver,
-  TestScreen,
-  Pause,
-}
-
-export enum TetrisMenu {
-  Game,
-  Main,
-  Highscore,
-  Level,
-  Keys,
-  EnterHighscore,
-}
-
-export interface TetrisHighscore {
-  player: string;
+export interface TetrisGameOverEvent {
   score: number;
 }
 
-export class TetrisEngine {
-  width: number;
-  height: number;
-  field: number[][];
-  block: number[][];
-  nextField: number[][];
-  state: TetrisBlock;
-  nextState: TetrisBlock;
-  hiddenRows = 4;
-  requestedRotation: number = 0;
-  requestedX: number = 0;
-  gameStage = TetrisGameStage.Running;
-  requestedY: number = 0;
-  updateCounter: number = 0;
-  lines = 0;
-  score = 0;
-  menu = TetrisMenu.Game;
-  highscore: TetrisHighscore[] = [
-    { player: "xxx", score: 0 },
-    { player: "xxx", score: 0 },
-    { player: "xxx", score: 0 },
-    { player: "xxx", score: 0 },
-    { player: "xxx", score: 0 },
-    { player: "xxx", score: 0 },
-    { player: "xxx", score: 0 },
-    { player: "xxx", score: 0 },
-    { player: "xxx", score: 0 },
-  ];
-  level: number = 1;
-  speed: number[] = [100, 90, 80, 70, 60, 50, 45, 40, 35, 30];
-  rang: number | undefined;
-  //         Level    1   2   3   4   5   6   7   8   9 10
-  trigger: () => void = () => {};
+export type TetrisGameOverHandler = (event: TetrisGameOverEvent) => void;
 
-  constructor(width: number, height: number) {
+export class TetrisEngine {
+  private width: number;
+  private height: number;
+  private field: number[][];
+  private block: number[][];
+  private nextField: number[][];
+  private state: TetrisBlock;
+  private nextState: TetrisBlock;
+  private hiddenRows = 4;
+  private requestedRotation: number = 0;
+  private requestedX: number = 0;
+  private requestedY: number = 0;
+  private updateCounter: number = 0;
+  private lines = 0;
+  private score = 0;
+  //                      Level    1   2   3   4   5   6   7   8   9   10
+  private updateRate: number[] = [100, 90, 80, 70, 60, 50, 45, 40, 35, 30];
+  private level: number = 1;
+
+  private rang: number | undefined;
+  public trigger: () => void = () => {};
+  private showTestScreen: boolean | undefined;
+  private isRunning: boolean = true;
+  public onGameOver: TetrisGameOverHandler = () => {};
+
+  constructor(width: number, height: number, showTestScreen?: boolean) {
     this.width = width;
     this.height = height + this.hiddenRows;
-    if (this.gameStage === TetrisGameStage.TestScreen) {
+    this.showTestScreen = showTestScreen;
+    if (showTestScreen) {
       this.width = 19;
       this.height = 33;
     }
@@ -72,50 +49,38 @@ export class TetrisEngine {
     this.nextState = new TetrisBlock();
     this.nextState.x = Math.round(this.width / 2);
     this.state = this.nextBlockState();
-    this.gameStage = TetrisGameStage.Running;
-    this.sortHighscore();
-  }
-
-  sortHighscore() {
-    this.highscore.sort((l, r) => r.score - l.score);
   }
 
   start() {
     this.field = this.initialField(this.width, this.height, 0);
     this.block = this.initialField(this.width, this.height, 0);
+    this.isRunning = true;
     this.state = this.nextBlockState();
-    this.gameStage = TetrisGameStage.Running;
     this.score = 0;
     this.rang = undefined;
   }
 
   pause() {
-    if (this.gameStage === TetrisGameStage.Running) {
-      this.gameStage = TetrisGameStage.Pause;
-      this.menu = TetrisMenu.Main;
-    } else if (this.gameStage === TetrisGameStage.Pause) {
-      this.gameStage = TetrisGameStage.Running;
-      this.menu = TetrisMenu.Game;
-    } else {
-      this.gameStage = TetrisGameStage.Pause;
-      this.menu = TetrisMenu.Main;
+    this.isRunning = !this.isRunning;
+  }
+
+  private nextBlockState() {
+    if (this.isRunning) {
+      let result = this.nextState.copy();
+      result.x = Math.round(this.width / 2) - 1;
+      this.nextState = new TetrisBlock();
+      this.nextState.x = 0;
+      this.nextState.y = 0;
+      this.nextState.rotation = (Math.round(Math.random() * 100000) %
+        4) as TetrisBlockRotation;
+      let index = Math.round(Math.random() * 7) % 7;
+      this.nextState.type = TetrisBlockTypes[index];
+      return result;
     }
+    return this.nextState;
   }
 
-  nextBlockState() {
-    let result = this.nextState.copy();
-    result.x = Math.round(this.width / 2) - 1;
-    this.nextState = new TetrisBlock();
-    this.nextState.x = 0;
-    this.nextState.y = 0;
-    this.nextState.rotation = (Math.round(Math.random() * 100000) %
-      4) as TetrisBlockRotation;
-    let index = Math.round(Math.random() * 7) % 7;
-    this.nextState.type = TetrisBlockTypes[index];
-    return result;
-  }
-
-  initialField(xCount: number, yCount: number, init: number) {
+  private initialField(xCount: number, yCount: number, init: number) {
     let field: number[][] = [];
     for (let y = 0; y < yCount; y++) {
       let row: number[] = [];
@@ -127,7 +92,7 @@ export class TetrisEngine {
     return field;
   }
 
-  renderToBlock(b: number[], value: number, block: number[][]) {
+  private renderToBlock(b: number[], value: number, block: number[][]) {
     block[b[1]][b[0]] = value;
     block[b[3]][b[2]] = value;
     block[b[5]][b[4]] = value;
@@ -135,7 +100,7 @@ export class TetrisEngine {
     return block;
   }
 
-  testScreen() {
+  private updateScreen() {
     let state = new TetrisBlock();
     state.y = 0;
     TetrisBlockTypes.forEach((type) => {
@@ -151,9 +116,11 @@ export class TetrisEngine {
     });
   }
 
-  update() {
-    if (this.gameStage === TetrisGameStage.Running) {
-      if (this.updateCounter % this.speed[this.level - 1] === 0) {
+  public update() {
+    if (this.showTestScreen) {
+      this.updateScreen();
+    } else if (this.isRunning) {
+      if (this.updateCounter % this.updateRate[this.level - 1] === 0) {
         this.moveDown();
       }
       this.updateMoveDown();
@@ -165,19 +132,15 @@ export class TetrisEngine {
     this.updateCounter++;
   }
 
-  updateGameOver() {
+  private updateGameOver() {
     let cell = this.field[0].find((c) => c > 0);
-    if (cell !== undefined) {
-      this.rang = this.highscore.findIndex((high) => high.score < this.score);
-      this.gameStage = TetrisGameStage.GameOver;
-      if (this.rang >= 0 && this.rang < this.highscore.length) {
-        this.menu = TetrisMenu.EnterHighscore;
-        this.trigger();
-      }
+    if (cell !== undefined && this.onGameOver !== undefined) {
+      this.isRunning = false;
+      this.onGameOver({ score: this.score });
     }
   }
 
-  updateFullRows() {
+  private updateFullRows() {
     for (let y = 4; y < this.height; y++) {
       let fullCells = 0;
       let value = 0;
@@ -207,13 +170,13 @@ export class TetrisEngine {
     }
   }
 
-  removeRow(rowToRemove: number) {
+  private removeRow(rowToRemove: number) {
     for (let r = rowToRemove; r >= 1; r--) {
       this.field[r] = [...this.field[r - 1]];
     }
   }
 
-  updateMoveX() {
+  private updateMoveX() {
     this.manipulateState(
       (newState) => {
         newState.x += this.popRequestedX();
@@ -225,7 +188,7 @@ export class TetrisEngine {
     );
   }
 
-  updateRotation() {
+  private updateRotation() {
     this.manipulateState(
       (newState) => {
         newState.rotation += this.popRequestedRotation();
@@ -241,7 +204,7 @@ export class TetrisEngine {
     );
   }
 
-  updateMoveDown() {
+  private updateMoveDown() {
     this.manipulateState(
       (newState) => {
         newState.y += this.popRequestedY();
@@ -255,7 +218,7 @@ export class TetrisEngine {
     );
   }
 
-  manipulateState(
+  private manipulateState(
     callback: (newState: TetrisBlock) => TetrisBlock,
     onHit: (oldB: number[]) => number[]
   ) {
@@ -271,39 +234,39 @@ export class TetrisEngine {
     this.renderToBlock(newB, 1, this.block);
   }
 
-  popRequestedX() {
+  private popRequestedX() {
     let delta = this.requestedX;
     this.requestedX = 0;
     return delta;
   }
 
-  popRequestedRotation() {
+  private popRequestedRotation() {
     let delta = this.requestedRotation;
     this.requestedRotation = 0;
     return delta;
   }
 
-  popRequestedY() {
+  private popRequestedY() {
     let delta = this.requestedY;
     this.requestedY = 0;
     return delta;
   }
 
-  clearBlock(b: number[]) {
+  private clearBlock(b: number[]) {
     if (!this.hitTest(b)) {
       this.renderToBlock(b, 0, this.block);
     }
     return b;
   }
 
-  copyBlockToField(b: number[]) {
+  private copyBlockToField(b: number[]) {
     for (let i = 0; i < 7; i += 2) {
       let n = i + 1;
       this.field[b[n]][b[i]] = 1;
     }
   }
 
-  hitTest(b: number[]): boolean {
+  private hitTest(b: number[]): boolean {
     let maxW = this.width;
     let maxH = this.height;
     for (let xi = 0; xi < 7; xi += 2) {
@@ -323,33 +286,61 @@ export class TetrisEngine {
     return false;
   }
 
-  rotateCCW() {
-    if (this.gameStage === TetrisGameStage.Running) {
+  public rotateCCW() {
+    if (this.isRunning) {
       this.requestedRotation--;
     }
   }
 
-  rotateCW() {
-    if (this.gameStage === TetrisGameStage.Running) {
+  public rotateCW() {
+    if (this.isRunning) {
       this.requestedRotation++;
     }
   }
 
-  moveRight() {
-    if (this.gameStage === TetrisGameStage.Running) {
+  public moveRight() {
+    if (this.isRunning) {
       this.requestedX++;
     }
   }
 
-  moveDown() {
-    if (this.gameStage === TetrisGameStage.Running) {
+  public moveDown() {
+    if (this.isRunning) {
       this.requestedY++;
     }
   }
 
-  moveLeft() {
-    if (this.gameStage === TetrisGameStage.Running) {
+  public moveLeft() {
+    if (this.isRunning) {
       this.requestedX--;
     }
+  }
+
+  public getBlock(): number[][] {
+    return this.block;
+  }
+  public getField(): number[][] {
+    return this.field;
+  }
+  public getNextField(): number[][] {
+    return this.nextField;
+  }
+  public getNextBlock(): number[][] {
+    let nextBlock: number[][] = this.initialField(4, 4, 0);
+    nextBlock = this.renderToBlock(this.nextState.toBlock(), 2, nextBlock);
+    return nextBlock;
+  }
+  public getScore(): number {
+    return this.score;
+  }
+
+  public getRang() {
+    return this.rang;
+  }
+  setLevel(l: number) {
+    this.level = l;
+  }
+  getLevel(): number {
+    return this.level;
   }
 }
