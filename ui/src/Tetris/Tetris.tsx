@@ -342,9 +342,9 @@ class TetrisGame {
     { player: "xxx", score: 0 },
   ];
   level: number = 1;
-  speed: number[] = [100, 90, 80, 70, 60, 50, 45, 40, 35];
+  speed: number[] = [100, 90, 80, 70, 60, 50, 45, 40, 35, 30];
   rang: number | undefined;
-  //         Level    1   2   3   4   5   6   7   8   9
+  //         Level    1   2   3   4   5   6   7   8   9 10
   trigger: () => void = () => {};
 
   public constructor(width: number, height: number) {
