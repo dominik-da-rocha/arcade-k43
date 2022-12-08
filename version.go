@@ -2,5 +2,5 @@
 // generated file to not edit
 // ---------------------------------------------------------------
 package main
-const Version = "v-1-0-3-gf5754ad-dirty"
+const Version = "v-1-0-4-g4d1bf93-dirty"
 
