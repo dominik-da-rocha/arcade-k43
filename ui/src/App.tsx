@@ -12,7 +12,7 @@ function App() {
             <Link to="/" className="left">
               <span>💀</span>
             </Link>
-            <div className="right">acarde-k43</div>
+            <div className="right">arcade-k43</div>
           </Neon>
         </header>
         <main>

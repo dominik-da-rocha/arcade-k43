@@ -1,5 +1,5 @@
 .Tetris {
-  margin: 2rem;
+  margin: 1rem;
 
   width: min-content;
   height: min-content;
@@ -15,6 +15,11 @@
   gap: 0.5rem;
   margin-bottom: 1rem;
   justify-content: space-between;
+}
+
+.Tetris .Button.Menu {
+  width: 4rem;
+  height: 4rem;
 }
 
 .Tetris .Board {
@@ -33,11 +38,124 @@
   background: #3016466f;
   font-size: 2rem;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.Tetris .Overlay h4 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.Tetris .Overlay .Button {
+  width: 8rem;
+}
+
+.Tetris .Overlay.Highscore .Entry {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-size: small;
+  flex-shrink: 1;
+}
+
+.Tetris .EditHighscore {
+  display: inline-flex;
+  justify-content: flex-start;
+  justify-items: flex-start;
+}
+
+.Tetris .Overlay.Highscore .Entry .Input,
+.Tetris .Overlay.Highscore .Entry .Button {
+  height: unset;
+  max-height: unset;
+  max-width: unset;
+  min-height: unset;
+  min-width: unset;
+}
+.Tetris .Overlay.Highscore .Entry .Input {
+  width: 6rem;
+}
+.Tetris .Overlay.Highscore .Entry .Button {
+  width: 3rem;
+}
+
+.Tetris .Overlay.Highscore .Entry .Rang {
+  display: inline-block;
+  width: 2rem;
+}
+
+.Tetris .Overlay.Highscore .Entry > span {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.Tetris .Overlay.GameOver {
   justify-content: center;
 }
 
+.Tetris .Overlay .Levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.Tetris .Overlay .Levels .Button {
+  width: 6rem;
+}
+
+.Tetris .Overlay .Levels .Button.Selected {
+  background: var(--color-light-green);
+  color: var(--color-dark-pink);
+  box-shadow: 0 0 2rem var(--color-light-green);
+  transition: all 1s;
+}
+
+.Tetris .Overlay.Keys .Entry {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  font-size: small;
+  width: 100%;
+}
+
+.Tetris .Overlay.Keys .Entry .Button {
+  height: 2rem;
+  width: 2rem;
+  max-height: 2rem;
+  max-width: 2rem;
+  min-height: 2rem;
+  min-width: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+.Tetris .Overlay.Keys .Entry .Button.Space {
+  width: 4rem;
+  max-width: 4rem;
+  min-width: 4rem;
+}
+
+.Tetris .Overlay.Keys .Entry > * {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.Tetris .Next {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+}
+
+.Tetris .Next,
 .Tetris .Game {
   display: flex;
   user-select: none;
@@ -47,6 +165,7 @@
   box-sizing: border-box;
 }
 
+.Tetris .Next .Block,
 .Tetris .Game .Block {
   display: inline-block;
   height: 1rem;
@@ -56,6 +175,7 @@
   margin: 0;
 }
 
+.Tetris .Next .Block.Moving,
 .Tetris .Game .Block.Settled,
 .Tetris .Game .Block.Moving {
   border: 2px solid var(--color-light-pink);
