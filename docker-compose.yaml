@@ -7,7 +7,5 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile
-      tags:
-        - ${AK43_VERSION}
     ports:
       - 9090:9090
