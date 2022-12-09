@@ -15,9 +15,13 @@ elif [[ "$1" == "docker" ]]; then
    docker image rm $(docker images -q $image)
    docker-compose up -d
    docker image tag "$image" "$image:$version"
-   docker image ls
    docker push "$image"
    docker push "$image:$version"
+   if [[ "$2" == "stable" ]]; then
+      docker image tag "$image" "$image:stable"
+      docker push "$image:stable"
+   fi
+   docker image ls
 else
    echo "unknown command $1"
 fi
