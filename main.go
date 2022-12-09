@@ -1,27 +1,28 @@
 package main
 
 import (
+	"arcade-k43/api"
+	"arcade-k43/utils"
 	"fmt"
-);
+	"log"
+	"net/http"
+)
 
 func main() {
-   empty:= "                                                                   ";
-   fmt.Println()
-   fmt.Println("▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄ ▄▄▄▄▄▄   ▄▄▄▄▄▄  ▄▄▄▄▄▄▄    ▄   ▄▄▄ ▄▄▄▄▄▄▄ ");
-   fmt.Println("█      █       █      █   ▄  █ █      ██       █  █ █ █   █       █");
-   fmt.Println("█  ▄   █       █  ▄   █  █ █ █ █  ▄    █    ▄▄▄█  █ █▄█   █▄▄▄    █");
-   fmt.Println("█ █▄█  █     ▄▄█ █▄█  █   █▄▄█▄█ █ █   █   █▄▄▄   █       █▄▄▄█   █");
-   fmt.Println("█      █    █  █      █    ▄▄  █ █▄█   █    ▄▄▄█  █▄▄▄    █▄▄▄    █");
-   fmt.Println("█  ▄   █    █▄▄█  ▄   █   █  █ █       █   █▄▄▄       █   █▄▄▄█   █");
-   fmt.Println("█▄█ █▄▄█▄▄▄▄▄▄▄█▄█ █▄▄█▄▄▄█  █▄█▄▄▄▄▄▄██▄▄▄▄▄▄▄█      █▄▄▄█▄▄▄▄▄▄▄█");
-   fmt.Println(alignRight(empty,Version));
-   fmt.Println(empty);
+	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
+	empty := "                                                                   "
+	fmt.Println()
+	fmt.Println("▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄ ▄▄▄▄▄▄   ▄▄▄▄▄▄  ▄▄▄▄▄▄▄    ▄   ▄▄▄ ▄▄▄▄▄▄▄ ")
+	fmt.Println("█      █       █      █   ▄  █ █      ██       █  █ █ █   █       █")
+	fmt.Println("█  ▄   █       █  ▄   █  █ █ █ █  ▄    █    ▄▄▄█  █ █▄█   █▄▄▄    █")
+	fmt.Println("█ █▄█  █     ▄▄█ █▄█  █   █▄▄█▄█ █ █   █   █▄▄▄   █       █▄▄▄█   █")
+	fmt.Println("█      █    █  █      █    ▄▄  █ █▄█   █    ▄▄▄█  █▄▄▄    █▄▄▄    █")
+	fmt.Println("█  ▄   █    █▄▄█  ▄   █   █  █ █       █   █▄▄▄       █   █▄▄▄█   █")
+	fmt.Println("█▄█ █▄▄█▄▄▄▄▄▄▄█▄█ █▄▄█▄▄▄█  █▄█▄▄▄▄▄▄██▄▄▄▄▄▄▄█      █▄▄▄█▄▄▄▄▄▄▄█")
+	fmt.Println(utils.AlignRight(empty, Version))
+	fmt.Println(empty)
+	http.HandleFunc("/api/v1", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "{\"version\": \""+Version+"\"}")
+	})
+	api.StartHttp()
 }
-
-func alignRight(empty string, Version string) string {
-	lmax := len(empty);
-   lver := len(Version)
-   rest := lmax - lver +1;
-   return empty[1:rest] + Version;
-}
-

@@ -1,11 +1,11 @@
 import React from "react";
 import "./App.css";
 import { Tetris } from "./Tetris/Tetris";
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { HashRouter, Link, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="App">
         <header>
           <Neon>
@@ -26,7 +26,7 @@ function App() {
           </Routes>
         </main>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
