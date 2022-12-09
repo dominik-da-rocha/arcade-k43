@@ -10,7 +10,7 @@ COPY ./main.go ./
 COPY ./version.go ./
 COPY ./api/ ./api/
 COPY ./utils/ ./utils/
-RUN go build -o=arcarde-k43
+RUN go build -o=arcade-k43
 
 FROM node:latest AS uibuild
 
@@ -27,11 +27,11 @@ RUN npm run build
 
 # Deploy
 FROM debian:bullseye-slim
-WORKDIR /opt/arcarde-k43
-COPY --from=gobuild /app/arcarde-k43 ./
+WORKDIR /opt/arcade-k43
+COPY --from=gobuild /app/arcade-k43 ./
 COPY --from=uibuild /app/build/ ./ui/build
 COPY ./config/ ./config
 EXPOSE 9090
-ENTRYPOINT ["/opt/arcarde-k43/arcarde-k43"]
+ENTRYPOINT ["/opt/arcade-k43/arcade-k43"]
 
 

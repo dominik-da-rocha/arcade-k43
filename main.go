@@ -10,15 +10,15 @@ import (
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
-	empty := "                                                                   "
+	empty := "                                                                          "
 	fmt.Println()
-	fmt.Println("▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄ ▄▄▄▄▄▄   ▄▄▄▄▄▄  ▄▄▄▄▄▄▄    ▄   ▄▄▄ ▄▄▄▄▄▄▄ ")
-	fmt.Println("█      █       █      █   ▄  █ █      ██       █  █ █ █   █       █")
-	fmt.Println("█  ▄   █       █  ▄   █  █ █ █ █  ▄    █    ▄▄▄█  █ █▄█   █▄▄▄    █")
-	fmt.Println("█ █▄█  █     ▄▄█ █▄█  █   █▄▄█▄█ █ █   █   █▄▄▄   █       █▄▄▄█   █")
-	fmt.Println("█      █    █  █      █    ▄▄  █ █▄█   █    ▄▄▄█  █▄▄▄    █▄▄▄    █")
-	fmt.Println("█  ▄   █    █▄▄█  ▄   █   █  █ █       █   █▄▄▄       █   █▄▄▄█   █")
-	fmt.Println("█▄█ █▄▄█▄▄▄▄▄▄▄█▄█ █▄▄█▄▄▄█  █▄█▄▄▄▄▄▄██▄▄▄▄▄▄▄█      █▄▄▄█▄▄▄▄▄▄▄█")
+	fmt.Println(" ▄▄▄▄▄▄ ▄▄▄▄▄▄   ▄▄▄▄▄▄▄ ▄▄▄▄▄▄ ▄▄▄▄▄▄  ▄▄▄▄▄▄▄    ▄▄▄   ▄ ▄   ▄▄▄ ▄▄▄▄▄▄▄ ")
+	fmt.Println("█      █   ▄  █ █       █      █      ██       █  █   █ █ █ █ █   █       █")
+	fmt.Println("█  ▄   █  █ █ █ █       █  ▄   █  ▄    █    ▄▄▄█  █   █▄█ █ █▄█   █▄▄▄    █")
+	fmt.Println("█ █▄█  █   █▄▄█▄█     ▄▄█ █▄█  █ █ █   █   █▄▄▄   █      ▄█       █▄▄▄█   █")
+	fmt.Println("█      █    ▄▄  █    █  █      █ █▄█   █    ▄▄▄█  █     █▄█▄▄▄    █▄▄▄    █")
+	fmt.Println("█  ▄   █   █  █ █    █▄▄█  ▄   █       █   █▄▄▄   █    ▄  █   █   █▄▄▄█   █")
+	fmt.Println("█▄█ █▄▄█▄▄▄█  █▄█▄▄▄▄▄▄▄█▄█ █▄▄█▄▄▄▄▄▄██▄▄▄▄▄▄▄█  █▄▄▄█ █▄█   █▄▄▄█▄▄▄▄▄▄▄█")
 	fmt.Println(utils.AlignRight(empty, Version))
 	fmt.Println(empty)
 	http.HandleFunc("/api/v1", func(w http.ResponseWriter, r *http.Request) {

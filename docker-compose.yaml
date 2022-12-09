@@ -1,9 +1,9 @@
 version: "3.7"
 
 services:
-  arcarde-k43:
-    container_name: arcarde-k43
-    image: dominikdarocha/arcarde-k43
+  arcade-k43:
+    container_name: arcade-k43
+    image: dominikdarocha/arcade-k43
     build:
       context: ./
       dockerfile: ./Dockerfile
