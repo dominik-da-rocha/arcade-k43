@@ -1,0 +1,17 @@
+{
+   "listenPort": 9090,
+   "html": "../ui/build",
+   "logging": {
+      "logCat": "debug",
+      "prefix": "ak43"
+   },
+   "database": {
+      "driver": "mysql",
+      "database": "ak43_db",
+      "host": "localhost",
+      "port": 3306,
+      "user": "ak43_user",
+      "password": "1234",
+      "migration": "./migration"
+   }
+}

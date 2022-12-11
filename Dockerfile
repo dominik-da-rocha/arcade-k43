@@ -3,16 +3,16 @@ FROM  golang:1.19.4-bullseye AS gobuild
 
 WORKDIR /app
 
-COPY ./go.mod ./
+COPY ./api/go.mod ./
 RUN go mod download
 
-COPY ./main.go ./
-COPY ./version.go ./
-COPY ./api/ ./api/
-COPY ./utils/ ./utils/
-RUN go build -o=arcade-k43
+COPY ./api/main.go ./
+COPY ./api/v1/ ./v1
+COPY ./api/utils/ ./utils
 
-FROM node:latest AS uibuild
+RUN go build -o ./arcade-k43 main.go
+
+FROM node:19-bullseye-slim AS uibuild
 
 WORKDIR /app
 
@@ -30,7 +30,7 @@ FROM debian:bullseye-slim
 WORKDIR /opt/arcade-k43
 COPY --from=gobuild /app/arcade-k43 ./
 COPY --from=uibuild /app/build/ ./ui/build
-COPY ./config/ ./config
+COPY ./api/config/ ./config
 EXPOSE 9090
 ENTRYPOINT ["/opt/arcade-k43/arcade-k43"]
 
