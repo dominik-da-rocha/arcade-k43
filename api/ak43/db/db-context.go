@@ -3,6 +3,7 @@ package db
 import (
 	"arcade-k43/ak43/console"
 	"database/sql"
+	"os"
 	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -14,7 +15,6 @@ type DbConfig struct {
 	Port     int    `json:"port"`
 	Host     string `json:"host"`
 	User     string `json:"user"`
-	Password string `json:"password"`
 }
 
 func NewDbConfig() *DbConfig {
@@ -24,7 +24,6 @@ func NewDbConfig() *DbConfig {
 		Port:     3306,
 		Host:     "localhost",
 		User:     "ak43_user",
-		Password: "1234",
 	}
 }
 
@@ -70,7 +69,11 @@ func (m *dbContext) openDbFromConfig(config *DbConfig) (*sql.DB, error) {
 		c1 := config.User + ":"
 		c2 := "@tcp(" + config.Host + ":" + strconv.Itoa(config.Port) + ")/" + config.Database
 		console.Info("Connecting to database: " + c1 + "****" + c2)
-		return sql.Open(config.Driver, c1+config.Password+c2)
+		password := os.Getenv("AK43_DB_PASSWORD")
+      if (password == "") {
+         console.Panic("no environment AK43_DB_PASSWORD provided")
+      }
+		return sql.Open(config.Driver, c1+password+c2)
 	} else {
 		console.PanicF("Unknown driver %s", config.Driver)
 	}

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-
 )
 
 type Ak43Server interface {
@@ -34,8 +33,8 @@ func (m *ak43Server) Start() error {
 	fileServer := http.FileServer(http.Dir(config.Html))
 	Handle("/", http.StripPrefix("/", fileServer))
 
-	port := "127.0.0.1:" + strconv.Itoa(config.ListenPort)
-	console.Info("listen on port: " + port)
-	err := http.ListenAndServe(port, nil)
+	listener := ":" + strconv.Itoa(config.ListenPort)
+	console.InfoF("listen on %s", listener)
+	err := http.ListenAndServe(listener, nil)
 	return err
 }
