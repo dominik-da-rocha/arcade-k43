@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strconv"
 
-	_ "github.com/go-sql-driver/mysql"
 )
 
 type Ak43Server interface {
@@ -35,7 +34,7 @@ func (m *ak43Server) Start() error {
 	fileServer := http.FileServer(http.Dir(config.Html))
 	Handle("/", http.StripPrefix("/", fileServer))
 
-	port := ":" + strconv.Itoa(config.ListenPort)
+	port := "127.0.0.1:" + strconv.Itoa(config.ListenPort)
 	console.Info("listen on port: " + port)
 	err := http.ListenAndServe(port, nil)
 	return err

@@ -31,8 +31,8 @@ func NewHighscoreDao(db *sql.DB) HighscoreDao {
 
 func (m *highscoreDao) GetTop10() ([]Highscore, error) {
 
-	query := "SELECT * FROM " + m.tab + " ORDER BY ? DESC LIMIT ?"
-	rows, err := m.db.Query(query, "score", 10)
+	query := "SELECT * FROM " + m.tab + " ORDER BY score DESC LIMIT ?"
+	rows, err := m.db.Query(query, 10)
 	if err != nil {
 		return nil, err
 	}

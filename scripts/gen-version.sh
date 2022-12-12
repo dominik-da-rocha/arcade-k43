@@ -9,3 +9,4 @@ echo "// ---------------------------------------------------------------" >>"$ou
 echo "package ak43" >>"$outfile"
 echo "const Version = \"$version\"" >>"$outfile"
 echo "" >>"$outfile"
+echo $version >".version"

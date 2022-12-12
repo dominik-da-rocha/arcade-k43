@@ -4,11 +4,11 @@ FROM  golang:1.19.4-bullseye AS gobuild
 WORKDIR /app
 
 COPY ./api/go.mod ./
+COPY ./api/go.sum ./
 RUN go mod download
 
 COPY ./api/main.go ./
-COPY ./api/v1/ ./v1
-COPY ./api/utils/ ./utils
+COPY ./api/ak43/ ./ak43
 
 RUN go build -o ./arcade-k43 main.go
 

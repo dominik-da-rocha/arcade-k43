@@ -60,7 +60,7 @@ type apiContext struct {
 
 func NewApiContext() ApiContext {
 	ctx := apiContext{
-		config: *NewApiConfig(),
+		config: *LoadApiConfigFromArgs(),
 		db:     db.NewDbContext(),
 	}
 	console.Init(ctx.config.Logging)

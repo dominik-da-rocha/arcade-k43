@@ -11,7 +11,6 @@
       "host": "localhost",
       "port": 3306,
       "user": "ak43_user",
-      "password": "1234",
-      "migration": "./migration"
+      "password": "1234"
    }
 }

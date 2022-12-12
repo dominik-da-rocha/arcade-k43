@@ -4,27 +4,27 @@ import (
 	"arcade-k43/ak43/console"
 	"database/sql"
 	"strconv"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type DbConfig struct {
-	Driver    string `json:"driver"`
-	Database  string `json:"database"`
-	Port      int    `json:"port"`
-	Host      string `json:"host"`
-	User      string `json:"user"`
-	Password  string `json:"password"`
-	Migration string `json:"migration"`
+	Driver   string `json:"driver"`
+	Database string `json:"database"`
+	Port     int    `json:"port"`
+	Host     string `json:"host"`
+	User     string `json:"user"`
+	Password string `json:"password"`
 }
 
 func NewDbConfig() *DbConfig {
 	return &DbConfig{
-		Driver:    "mysql",
-		Database:  "ak43_db",
-		Port:      3306,
-		Host:      "localhost",
-		User:      "ak43_user",
-		Password:  "1234",
-		Migration: "./migration",
+		Driver:   "mysql",
+		Database: "ak43_db",
+		Port:     3306,
+		Host:     "localhost",
+		User:     "ak43_user",
+		Password: "1234",
 	}
 }
 
@@ -54,7 +54,7 @@ func (m *dbContext) Init(config *DbConfig) error {
 	if err != nil {
 		console.Panic("can not open database! " + err.Error())
 	}
-
+	defer db.Close()
 	m.createTableMigration(db)
 	oldMigrations := m.selectOldMigrations(db)
 	m.callMigrationScripts(db, oldMigrations)
@@ -71,17 +71,21 @@ func (m *dbContext) openDbFromConfig(config *DbConfig) (*sql.DB, error) {
 		c2 := "@tcp(" + config.Host + ":" + strconv.Itoa(config.Port) + ")/" + config.Database
 		console.Info("Connecting to database: " + c1 + "****" + c2)
 		return sql.Open(config.Driver, c1+config.Password+c2)
+	} else if config.Driver == "sqlite3" {
+		console.Info("Connecting to database: " + config.Database)
+		return sql.Open(config.Driver, config.Database)
+	} else {
+		console.PanicF("Unknown driver %s", config.Driver)
 	}
-	console.Panic("Db driver not supported" + config.Driver)
+
 	return nil, nil
 }
 
 func (m *dbContext) createTableMigration(db *sql.DB) {
-	query := "CREATE TABLE IF NOT EXISTS " + m.dbConfig.Database + ".migration (" +
+	query := "CREATE TABLE IF NOT EXISTS migration (" +
 		"id INT NOT NULL," +
 		"comment VARCHAR(64)," +
-		"PRIMARY KEY (id)" +
-		")"
+		"PRIMARY KEY (id))"
 	rows, err := db.Query(query)
 	if err != nil {
 		console.Panic("can not create table migration: " + err.Error())
@@ -91,7 +95,7 @@ func (m *dbContext) createTableMigration(db *sql.DB) {
 }
 
 func (m *dbContext) insertMigration(db *sql.DB, id int, mig *migration) bool {
-	query := "INSERT INTO " + m.dbConfig.Database + ".migration (id, comment) VALUES (" +
+	query := "INSERT INTO migration (id, comment) VALUES (" +
 		strconv.Itoa(id) + ",'" + mig.comment + "');"
 	rows, err := db.Query(query)
 	if err != nil {
@@ -103,12 +107,12 @@ func (m *dbContext) insertMigration(db *sql.DB, id int, mig *migration) bool {
 
 func (m *dbContext) selectOldMigrations(db *sql.DB) map[int]*migration {
 	oldMigrations := map[int]*migration{}
-	query := "SELECT * FROM " + m.dbConfig.Database + ".migration"
+	query := "SELECT * FROM migration;"
 	rows, err := db.Query(query)
 	if err != nil {
-		console.Panic("can not read migrations" + err.Error())
+		console.Panic("can not read migrations: " + err.Error())
 	}
-
+	defer rows.Close()
 	for rows.Next() {
 		var mig migration
 		var id int
