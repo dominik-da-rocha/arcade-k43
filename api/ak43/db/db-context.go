@@ -71,9 +71,6 @@ func (m *dbContext) openDbFromConfig(config *DbConfig) (*sql.DB, error) {
 		c2 := "@tcp(" + config.Host + ":" + strconv.Itoa(config.Port) + ")/" + config.Database
 		console.Info("Connecting to database: " + c1 + "****" + c2)
 		return sql.Open(config.Driver, c1+config.Password+c2)
-	} else if config.Driver == "sqlite3" {
-		console.Info("Connecting to database: " + config.Database)
-		return sql.Open(config.Driver, config.Database)
 	} else {
 		console.PanicF("Unknown driver %s", config.Driver)
 	}
