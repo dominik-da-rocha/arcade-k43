@@ -1,7 +1,7 @@
 #!/bin/bash
 
 image="dominikdarocha/arcade-k43"
-version="$ (cat .version)"
+version="$(cat .version)"
 
 docker push "$image"
 docker push "$image:$version"
