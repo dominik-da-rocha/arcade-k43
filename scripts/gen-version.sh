@@ -1,6 +1,7 @@
 #!/bin/bash
 
 version="$(git describe --tags --dirty | sed 's/-/./g')"
+echo $version
 image="dominikdarocha/arcade-k43"
 outfile="api/ak43/version.go"
 echo "// ---------------------------------------------------------------" >"$outfile"
