@@ -77,16 +77,16 @@ func Panic(args string) {
 }
 func Always(args string) { std.Output(2, fmt.Sprintf("[%s] %s", LcAlways, args)) }
 
-func TraceF(f string, args ...interface{}) { std.Output(2, fmt.Sprintf("[Trace] "+f, args...)) }
-func DebugF(f string, args ...interface{}) { std.Output(2, fmt.Sprintf("[Debug] "+f, args...)) }
-func InfoF(f string, args ...interface{})  { std.Output(2, fmt.Sprintf("[Info] "+f, args...)) }
-func WarnF(f string, args ...interface{})  { std.Output(2, fmt.Sprintf("[Warn] "+f, args...)) }
-func ErrorF(f string, args ...interface{}) { std.Output(2, fmt.Sprintf("[Error] "+f, args...)) }
+func TraceF(f string, args ...interface{}) { std.Output(2, fmt.Sprintf("[trace] "+f, args...)) }
+func DebugF(f string, args ...interface{}) { std.Output(2, fmt.Sprintf("[debug] "+f, args...)) }
+func InfoF(f string, args ...interface{})  { std.Output(2, fmt.Sprintf("[info] "+f, args...)) }
+func WarnF(f string, args ...interface{})  { std.Output(2, fmt.Sprintf("[warn] "+f, args...)) }
+func ErrorF(f string, args ...interface{}) { std.Output(2, fmt.Sprintf("[error] "+f, args...)) }
 func PanicF(f string, args ...interface{}) {
-	s := fmt.Sprintf("[Panic] "+f, args)
+	s := fmt.Sprintf("[panic] "+f, args...)
 	std.Output(2, s)
 	panic(s)
 }
 func AlwaysF(f string, args ...interface{}) {
-	std.Output(2, fmt.Sprintf("[Always] "+f, LcAlways, args))
+	std.Output(2, fmt.Sprintf("[always] "+f, args...))
 }
