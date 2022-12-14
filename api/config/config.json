@@ -1,8 +1,9 @@
 {
    "listenPort": 9090,
+   "accept": "127.0.0.1",
    "html": "../ui/build",
    "logging": {
-      "logCat": "debug",
+      "logCat": "always",
       "prefix": "ak43"
    },
    "database": {

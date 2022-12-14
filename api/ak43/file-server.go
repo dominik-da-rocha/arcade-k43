@@ -33,7 +33,7 @@ func (m *ak43Server) Start() error {
 	fileServer := http.FileServer(http.Dir(config.Html))
 	Handle("/", http.StripPrefix("/", fileServer))
 
-	listener := ":" + strconv.Itoa(config.ListenPort)
+	listener := config.Accept + ":" + strconv.Itoa(config.ListenPort)
 	console.InfoF("listen on %s", listener)
 	err := http.ListenAndServe(listener, nil)
 	return err

@@ -16,6 +16,7 @@ type ApiContext interface {
 type ApiConfig struct {
 	ListenPort int                    `json:"listenPort"`
 	Html       string                 `json:"html"`
+	Accept     string                 `json:"accept"`
 	Database   *db.DbConfig           `json:"database"`
 	Logging    *console.LoggingConfig `json:"logging"`
 }
@@ -29,9 +30,14 @@ func NewApiConfig() *ApiConfig {
 	}
 }
 
-func LoadApiConfig(file string) *ApiConfig {
-	console.Info("reading config file: " + file)
-	content, err := os.ReadFile(file)
+func LoadApiConfig(filename string) *ApiConfig {
+	if !FileExists(filename) {
+		console.WarnF("config file not found: %s", filename)
+		return NewApiConfig()
+	}
+
+	console.Info("reading config file: " + filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		console.Info("failed to read file")
 		return NewApiConfig()
@@ -76,5 +82,4 @@ func (m *apiContext) UseDB(w http.ResponseWriter, callback func(*sql.DB)) {
 	}
 	defer db.Close()
 	callback(db)
-	return
 }

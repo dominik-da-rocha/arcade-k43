@@ -25,8 +25,8 @@ export class TetrisEngine {
   private updateCounter: number = 0;
   private lines = 0;
   private score = 0;
-  //                      Level    1   2   3   4   5   6   7   8   9   10
-  private updateRate: number[] = [100, 90, 80, 70, 60, 50, 45, 40, 35, 30];
+  //                      Level   1   2  3  4  5  6  7  8  9  10
+  private updateRate: number[] = [120, 100, 90, 80, 70, 60, 50, 40, 30, 20];
   private level: number = 1;
 
   private rang: number | undefined;

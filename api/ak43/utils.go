@@ -3,8 +3,10 @@ package ak43
 import (
 	"arcade-k43/ak43/console"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
+	"os"
 )
 
 func AlignRight(empty string, Version string) string {
@@ -43,3 +45,7 @@ func ReadJson(w http.ResponseWriter, r *http.Request, out interface{}) bool {
 }
 
 
+func FileExists(filePath string) bool {
+	_, error := os.Stat(filePath)
+	return !errors.Is(error, os.ErrNotExist)
+}

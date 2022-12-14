@@ -106,6 +106,12 @@ export class TetrisMenu {
       })
       .catch((err) => {
         console.error(err);
+      })
+      .finally(() => {
+        this.score = undefined;
+        this.rang = undefined;
+        this.engine.start();
+        this.engine.pause();
       });
   }
 
