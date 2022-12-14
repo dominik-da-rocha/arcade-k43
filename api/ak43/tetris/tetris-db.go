@@ -77,27 +77,3 @@ func (m *highscoreDao) SetTop10(entries []Highscore) error {
 	return err
 
 }
-
-/*
-var queryString = `INSERT INTO "person_table" (
-        "name"
-        , "age"
-        , "job"
-    ) VALUES `
-
-    numOfFields := 3
-    params := make([]interface{}, len(personSlice)*numOfFields)
-    for i, p := range personSlice {
-        pos := i * numOfFields
-        params[pos+0] = p.Name
-        params[pos+1] = p.Age
-        params[pos+2] = p.Job
-
-        queryString += `(?, ?, ?),`
-    }
-
-    queryString = queryString[:len(queryString)-1] // drop last comma
-
-    _, err := db.Exec(queryString, params...)
-    return err
-*/
