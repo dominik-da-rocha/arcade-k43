@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"os"
 	"strconv"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -41,11 +42,6 @@ func NewDbContext() DbContext {
 	return &context
 }
 
-type migration struct {
-	comment string
-	query   string
-}
-
 func (m *dbContext) Init(config *DbConfig) error {
 	m.dbConfig = config
 
@@ -54,9 +50,7 @@ func (m *dbContext) Init(config *DbConfig) error {
 		console.Panic("can not open database! " + err.Error())
 	}
 	defer db.Close()
-	m.createTableMigration(db)
-	oldMigrations := m.selectOldMigrations(db)
-	m.callMigrationScripts(db, oldMigrations)
+	m.callMigrationScripts(db)
 	return nil
 }
 
@@ -70,9 +64,9 @@ func (m *dbContext) openDbFromConfig(config *DbConfig) (*sql.DB, error) {
 		c2 := "@tcp(" + config.Host + ":" + strconv.Itoa(config.Port) + ")/" + config.Database
 		console.Info("Connecting to database: " + c1 + "****" + c2)
 		password := os.Getenv("AK43_DB_PASSWORD")
-      if (password == "") {
-         console.Panic("no environment AK43_DB_PASSWORD provided")
-      }
+		if password == "" {
+			console.Panic("no environment AK43_DB_PASSWORD provided")
+		}
 		return sql.Open(config.Driver, c1+password+c2)
 	} else {
 		console.PanicF("Unknown driver %s", config.Driver)
@@ -81,66 +75,25 @@ func (m *dbContext) openDbFromConfig(config *DbConfig) (*sql.DB, error) {
 	return nil, nil
 }
 
-func (m *dbContext) createTableMigration(db *sql.DB) {
-	query := "CREATE TABLE IF NOT EXISTS migration (" +
-		"id INT NOT NULL," +
-		"comment VARCHAR(64)," +
-		"PRIMARY KEY (id))"
-	rows, err := db.Query(query)
-	if err != nil {
-		console.Panic("can not create table migration: " + err.Error())
-	}
-	defer rows.Close()
-	console.Info("table migration exists")
-}
-
-func (m *dbContext) insertMigration(db *sql.DB, id int, mig *migration) bool {
-	query := "INSERT INTO migration (id, comment) VALUES (" +
-		strconv.Itoa(id) + ",'" + mig.comment + "');"
-	rows, err := db.Query(query)
-	if err != nil {
-		console.Panic("can not create table migration: " + err.Error())
-	}
-	defer rows.Close()
-	return true
-}
-
-func (m *dbContext) selectOldMigrations(db *sql.DB) map[int]*migration {
-	oldMigrations := map[int]*migration{}
-	query := "SELECT * FROM migration;"
-	rows, err := db.Query(query)
-	if err != nil {
-		console.Panic("can not read migrations: " + err.Error())
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var mig migration
-		var id int
-		err = rows.Scan(&id, &mig.comment)
-		if err != nil {
-			console.Info(err.Error())
-		} else {
-			console.Info("migration present " + strconv.Itoa(id) + " " + mig.comment)
-			oldMigrations[id] = &mig
-		}
-	}
-
-	return oldMigrations
-}
-
-func (m *dbContext) callMigrationScripts(db *sql.DB, oldMigrations map[int]*migration) {
-	for id, mig := range migrations {
-		if _, found := oldMigrations[id]; !found {
+func (m *dbContext) callMigrationScripts(db *sql.DB) {
+	dao := NewMigrationDao(db)
+	dao.CreateTable()
+	oldMigrations := dao.All()
+	for _, mig := range migrations {
+		SetMigrationHash(mig)
+		if oldMig, found := oldMigrations[mig.version]; !found {
 			if m.runMigration(db, mig) {
-				if m.insertMigration(db, id, mig) {
-					console.Info("migration successful: " + strconv.Itoa(id) + " " + mig.comment)
-				}
+				mig.date = time.Now()
+				dao.Add(mig)
+				console.Info("migration successful: " + mig.version + " " + mig.comment)
 			}
+		} else if mig.hash != oldMig.hash {
+			console.Info("migration hash is invalid: " + mig.version + " " + mig.comment)
 		}
 	}
 }
 
-func (m *dbContext) runMigration(db *sql.DB, mig *migration) bool {
+func (m *dbContext) runMigration(db *sql.DB, mig *Migration) bool {
 	rows, err := db.Query(string(mig.query))
 	if err != nil {
 		console.Panic("Failed to query migration " + err.Error())
@@ -149,8 +102,9 @@ func (m *dbContext) runMigration(db *sql.DB, mig *migration) bool {
 	return true
 }
 
-var migrations = []*migration{
+var migrations = []*Migration{
 	{
+		version: "v0.0",
 		comment: "create table tetris_highscore",
 		query: `CREATE TABLE IF NOT EXISTS ak43_db.tetris_highscore (
                id INT NOT NULL AUTO_INCREMENT,
@@ -160,6 +114,7 @@ var migrations = []*migration{
             );`,
 	},
 	{
+		version: "v0.1",
 		comment: "fill table tetris_highscore",
 		query: `INSERT INTO ak43_db.tetris_highscore (name, score) 
                VALUES ('xxx', 0),
