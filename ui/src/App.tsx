@@ -8,12 +8,12 @@ function App() {
     <HashRouter>
       <div className="App">
         <header>
-          <Neon>
+          <div className="Neon">
             <Link to="/" className="left">
               <span>💀</span>
             </Link>
             <div className="right">arcade-k43</div>
-          </Neon>
+          </div>
         </header>
         <main>
           <Routes>
@@ -35,14 +35,9 @@ function Home() {
     <div className="Home">
       <article>
         <h1>welcome</h1>
-        <ul>
-          <li>
-            <a href="/tennis1958.html">1958 Tennis Cup</a>
-          </li>
-          <li>
-            <Link to="tetris">tetris</Link>
-          </li>
-        </ul>
+        <div className="Tiles">
+          <Tile route="tetris" image="/media/tetris.png" title="tetris" />
+        </div>
       </article>
       <footer>
         <Link to="/notice">notice</Link>
@@ -66,28 +61,19 @@ function Notice() {
   );
 }
 
-function Neon(props: { children: React.ReactNode }) {
-  return <div className="Neon">{props.children}</div>;
+export interface TileProps {
+  route: string;
+  image: string;
+  title: string;
 }
-/*
-function LoremIpsum(props: { count: number }) {
-  var items = [];
-  for (let i = 0; i < props.count; i++) {
-    items.push(
-      <div className="LoremIpsum" key={"lorem-" + i}>
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-        eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-        voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
-        clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
-        amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-        nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-        sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-        rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-        ipsum dolor sit amet.
-      </div>
-    );
-  }
-  return <>{items}</>;
+
+export function Tile(props: TileProps) {
+  return (
+    <Link className="Tile" to={props.route}>
+      <img className="Image" src={props.image} alt="tetris"></img>
+      <span className="Title">{props.title}</span>
+    </Link>
+  );
 }
-*/
+
 export default App;
