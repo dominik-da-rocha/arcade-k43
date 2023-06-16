@@ -1,0 +1,26 @@
+.Board {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.Board .Row {
+  display: flex;
+}
+
+.Board .Cell {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  width: 1rem;
+  height: 1rem;
+  box-sizing: border-box;
+}
+
+.Board .Wall {
+  box-shadow: 0 0 5px #00ffe1, inset 0 0 5px #00ffe1;
+  border-radius: 5px;
+}
+
+.Board .Space {
+}

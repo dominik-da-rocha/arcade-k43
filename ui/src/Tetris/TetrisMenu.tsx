@@ -200,7 +200,7 @@ export class TetrisMenu {
           <div className="Button">
             <span className="MaterialIcons">arrow_right</span>
           </div>
-          <span>move right</span>{" "}
+          <span>move right</span>
         </div>
         <div className="Entry">
           <div className="Button">

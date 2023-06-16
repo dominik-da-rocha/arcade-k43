@@ -25,6 +25,7 @@ main {
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
+  overflow-y: auto;
 }
 
 footer {
@@ -131,7 +132,8 @@ main .Tiles .Tile {
   height: 6rem;
   width: 6rem;
   border-radius: 1rem;
-  box-shadow: 0 0 1rem var(--color-pink);
+  box-shadow: 0 0 0.5rem var(--color-pink);
+  transition: 0.25s box-shadow, background;
   margin: 1rem;
   z-index: 100;
 }
@@ -139,7 +141,6 @@ main .Tiles .Tile {
 main .Tiles .Tile:hover,
 main .Tiles .Tile:active {
   box-shadow: 0 0 4rem var(--color-light-pink);
-  transition: 0.5s box-shadow, background;
   z-index: 101;
 }
 

@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import { Tetris } from "./Tetris/Tetris";
 import { HashRouter, Link, Route, Routes } from "react-router-dom";
+import { TestBoard } from "./Board/Board";
 
 function App() {
   return (
@@ -20,9 +21,10 @@ function App() {
             <Route index path="/" element={<Home />} />
             <Route
               path="/tetris"
-              element={<Tetris id="tetris" width={15} height={19}></Tetris>}
+              element={<Tetris id="tetris" width={15} height={19} />}
             />
-            <Route path="/notice" element={<Notice></Notice>} />
+            <Route path="/board" element={<TestBoard />} />
+            <Route path="/notice" element={<Notice />} />
           </Routes>
         </main>
       </div>
@@ -37,6 +39,7 @@ function Home() {
         <h1>welcome</h1>
         <div className="Tiles">
           <Tile route="tetris" image="/media/tetris.png" title="tetris" />
+          <Tile route="board" image="abc" title="board" />
         </div>
       </article>
       <footer>
@@ -70,7 +73,7 @@ export interface TileProps {
 export function Tile(props: TileProps) {
   return (
     <Link className="Tile" to={props.route}>
-      <img className="Image" src={props.image} alt="tetris"></img>
+      <img className="Image" src={props.image} alt={props.title}></img>
       <span className="Title">{props.title}</span>
     </Link>
   );

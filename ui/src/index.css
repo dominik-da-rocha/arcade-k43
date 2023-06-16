@@ -46,3 +46,24 @@ a {
   color: var(--color-foreground);
   text-decoration: none;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #160b1a44;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #fde9fd55;
+  box-shadow: 0 0 2px var(--color-light-green);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-light-green);
+  box-shadow: 0 0 20px var(--color-light-green);
+}
